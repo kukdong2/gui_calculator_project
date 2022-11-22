@@ -1,29 +1,36 @@
-# gui_calculator
+# gui_calculator 개요
 
-파이썬을 이용하여 간단한 계산기를 실행해보는 프로그램입니다.
+파이썬을 이용하여 윈도우 표준 계산기와 비슷한 계산기를 실행해보는 프로그램입니다.
+
+이 프로그램은 해당 블로그의 프로그램을 기반으로 추가 기능과 UI를 추가하였습니다.
+``` 
+https://studyingrabbit.tistory.com/23
+``` 
+
+위의 계산기에서 추가로 구현할 목표는 다음과 같습니다.
+* PyQt 기반의 계산기 코드를 활용
+* UI수정 및 기능 추가 필요
 
 ## Getting Started
 
-해당 프로그램 코드는 해당 블로그의 글을 참고하였습니다.
-https://studyingrabbit.tistory.com/23
+### Installing
+ Python을 실행할 수 있는 프로그램이 필요합니다.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+프로그램을 실행하기 위해서 pyqt5파이썬 패키지 모듈설치가 필요합니다.
 
-pip를 통한 pyqt5설치
+Anaconda나 Vscode 등을 이용해서 해당 패키지 모듈을 설치합니다. 
+
+* pip를 통한 pyqt5설치
 ``` 
 pip install pyqt5
 ```
 
-### Installing
-
-
 ## Running the tests
 
-Explain how to run the automated tests for this system
+파이썬 실행이 가능한 환경에서 실행을 합니다.
 
-파일을 바로 실행
 
 ### Break down into end to end tests
 
