@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
 
+#UI수정(2022.11.27)-issue_#7
 class Main(QDialog):
     def __init__(self):
         super().__init__()
@@ -16,14 +17,15 @@ class Main(QDialog):
         layout_equation_solution = QFormLayout()
 
         ### 수식 입력과 답 출력을 위한 LineEdit 위젯 생성
-        label_equation = QLabel("Equation: ")
-        label_solution = QLabel("Number: ")
+        label_equation = QLabel("")
+        #issue_#7수정 label_solution = QLabel("Number: ")
         self.equation = QLineEdit("")
-        self.solution = QLineEdit("")
+        #issue_#7수정 self.solution = QLineEdit("")
 
         ### layout_equation_solution 레이아웃에 수식, 답 위젯을 추가
         layout_equation_solution.addRow(label_equation, self.equation)
-        layout_equation_solution.addRow(label_solution, self.solution)
+        #layout_equation_solution.addRow(label_equation, self.solution)
+        #issue_#7수정 layout_equation_solution.addRow(label_solution, self.solution)
 
         ### 사칙연상 버튼 생성
         button_plus = QPushButton("+")
@@ -92,10 +94,10 @@ class Main(QDialog):
     #################
     ### functions ###
     #################
-    def number_button_clicked(self, num):
-        equation = self.equation.text()
+    def number_button_clicked(self, num): #버튼을 클릭했을때
+        equation = self.equation.text() #
         equation += str(num)
-        self.equation.setText(equation)
+        self.equation.setText(equation) #settext 텍스트 쓰는것
 
     def button_operation_clicked(self, operation):
         equation = self.equation.text()
@@ -105,11 +107,11 @@ class Main(QDialog):
     def button_equal_clicked(self):
         equation = self.equation.text()
         solution = eval(equation)
-        self.solution.setText(str(solution))
+        self.equation.setText(str(solution)) #21:45수정 #7
 
     def button_clear_clicked(self):
         self.equation.setText("")
-        self.solution.setText("")
+        #self.solution.setText("") #21:45수정 #7
 
     def button_backspace_clicked(self):
         equation = self.equation.text()
