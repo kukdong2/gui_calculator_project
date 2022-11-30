@@ -53,7 +53,7 @@ class Main(QDialog):
         label_equation = QLabel("")
         self.equation = QLineEdit("")
         # 입력과 답 출력 창 크기 및 출력 문자를 윈도우 계산기처럼 오른쪽으로 배치
-        self.equation.setFont(QFont('Arial', 40))
+        self.equation.setFont(QFont('Arial', 40, QFont.Bold))
         self.equation.setAlignment(Qt.AlignRight)
 
         # d. 모든 레이아웃들을 정리할 mainlayout은 QVBox레이아웃 사용

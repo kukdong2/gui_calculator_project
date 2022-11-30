@@ -75,7 +75,7 @@ Please read [CONTRIBUTING.md] for details on our code of conduct, and the proces
 
 ## Versioning
 
-gui_calculator_project v1.1 (updated 2022.12.01)
+gui_calculator_project v1.2 (updated 2022.12.01)
 
 ## Authors
 
