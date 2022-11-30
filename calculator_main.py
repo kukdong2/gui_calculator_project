@@ -7,6 +7,7 @@ from PyQt5.QtCore import Qt
 
 # UI수정(2022.11.27)-issue_#1
 # 기능 개선 및 추가(2022.11.29)-issue_#2
+# gui_calculator_project v1.0 (2022.12.01)
 
 # 숫자를 입력받을때 연산자 전의 숫자인지, 연산자 다음 초기화된 화면에서 새로 등장한 숫자인지 판별하기위한 전역변수
 global i 
@@ -52,7 +53,7 @@ class Main(QDialog):
         label_equation = QLabel("")
         self.equation = QLineEdit("")
         # 입력과 답 출력 창 크기 및 출력 문자를 윈도우 계산기처럼 오른쪽으로 배치
-        self.equation.setFont(QFont('Arial', 30))
+        self.equation.setFont(QFont('Arial', 40))
         self.equation.setAlignment(Qt.AlignRight)
 
         # d. 모든 레이아웃들을 정리할 mainlayout은 QVBox레이아웃 사용
@@ -212,7 +213,7 @@ class Main(QDialog):
         # c. 창 title 및 size 설정
 
         self.setWindowTitle('계산기')
-        self.resize(380, 550)
+        self.resize(360, 530)
 
         self.setLayout(main_layout)
         self.show()
@@ -299,6 +300,7 @@ class Main(QDialog):
     def past_operation(self, code):
         global Anum, Bnum
         if code=="%":
+            
             result1 = Anum % Bnum
             result1 = round(result1, 9)
             Anum=result1
@@ -336,6 +338,7 @@ class Main(QDialog):
                 equation= str(self.equation.text())     #현재 창에 있는 숫자 Anum으로 입력
                 Anum = float(equation)
                 code = "%"
+                self.equation.setText("")
 
             elif i>=2 and Anum != None:                 #두번째 피연산까지 입력되었을때 (이땐 이전 연산 결과값 출력이 필요함)
                 if op > A_op :                          #현재 피연산자가 2번째 피연산자 B인지 확인
@@ -361,6 +364,7 @@ class Main(QDialog):
                 equation= str(self.equation.text())     #현재 창에 있는 숫자 Anum으로 입력
                 Anum = float(equation)
                 code = "÷"
+                self.equation.setText("")
 
             elif i>=2 and Anum != None:                 #두번째 피연산까지 입력되었을때 (이땐 이전 연산 결과값 출력이 필요함)
                 if op > A_op :                          #현재 피연산자가 2번째 피연산자 B인지 확인
@@ -386,6 +390,7 @@ class Main(QDialog):
                 equation= str(self.equation.text())     #현재 창에 있는 숫자 Anum으로 입력
                 Anum = float(equation)
                 code = "x"
+                self.equation.setText("")
 
             elif i>=2 and Anum != None:                 #두번째 피연산까지 입력되었을때 (이땐 이전 연산 결과값 출력이 필요함)
                 if op > A_op :                          #현재 피연산자가 2번째 피연산자 B인지 확인
@@ -411,6 +416,7 @@ class Main(QDialog):
                 equation= str(self.equation.text())     #현재 창에 있는 숫자 Anum으로 입력
                 Anum = float(equation)
                 code = "-"
+                self.equation.setText("")
 
             elif i>=2 and Anum != None:                 #두번째 피연산까지 입력되었을때 (이땐 이전 연산 결과값 출력이 필요함)
                 if op > A_op :                          #현재 피연산자가 2번째 피연산자 B인지 확인
@@ -435,6 +441,7 @@ class Main(QDialog):
                 equation= str(self.equation.text())     #현재 창에 있는 숫자 Anum으로 입력
                 Anum = float(equation)
                 code = "+"
+                self.equation.setText("")
 
             elif i>=2 and Anum != None:                 #두번째 피연산까지 입력되었을때 (이땐 이전 연산 결과값 출력이 필요함)
                 if op > A_op :                          #현재 피연산자가 2번째 피연산자 B인지 확인
