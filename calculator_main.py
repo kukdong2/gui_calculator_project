@@ -5,12 +5,26 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
 
-global i
-i = 1
-
 # UI수정(2022.11.27)-issue_#1
 # 기능 개선 및 추가(2022.11.29)-issue_#2
 
+# 숫자를 입력받을때 연산자 전의 숫자인지, 연산자 다음 초기화된 화면에서 새로 등장한 숫자인지 판별하기위한 전역변수
+global i 
+i = 1
+# A ÷ B , A % B, A - B, 와 같이 피연산자의 순서에 따라 값이 달라지는 경우 A연산자와 B 연산자의 위치를 판별하기 위한 전역변수
+global op
+global A_op
+global B_op
+op = 0
+A_op = 0
+B_op = 0
+# 전의 연산자를 저장하기 위한 변수
+global code
+code = ""
+global Anum
+global Bnum
+Anum = None
+Bnum = None
 
 class Main(QDialog):
 
@@ -207,22 +221,24 @@ class Main(QDialog):
     ##################################################################################################
     ########################################  functions  #############################################
     ##################################################################################################
-
+        
     #  기능 구현 방식
-    #  윈도우 계산기에선 연산자를 누를때마다 출력화면이 초기화 되고 " = " 를 누르지 않아도 결과값이 표시됨.
-    #  연산자를 누를때 이전의 계산값이 저장되있어야함.
+    #  윈도우 계산기에선 연산자를 누를때마다 출력화면이 초기화 되고 " = " 를 누르지 않아도 연산자를 눌렀을때
+    #                                          (피연산자가 2개필요한 함수들은 두번째 연산자 입력부터) 결과값이 표시됨.
+    #  연산자를 연속해서 누를때 이전 연산에 대한 계산값을 출력해야함.
 
     # 1. 숫자 버튼을 클릭했을때 작동되는 함수
-    # i가 홀수, 짝수인지에 따라 현재클릭된 숫자가 자리수에 추가되는 숫자인지, 연산자 다음에 오는 새로운 피연산자인지 구분
+    #   - i가 1인지 2인지 짝수인지에 따라 현재클릭된 숫자가 현재 추가되는 숫자인지, 연산자 다음에 오는 새로운 피연산자인지 구분
+    
     def number_button_clicked(self, num):
         global i
-        if i % 2 == 1:
+        if i == 1:
             equation = self.equation.text()
             equation += str(num)
             self.Anumber = float(equation)
             self.equation.setText(equation)
         
-        elif i==2:
+        elif i == 2: #연산자 다음 화면은 초기화 되어야 하기때문에
             self.equation.setText("")
             equation = self.equation.text() 
             equation += str(num)
@@ -239,48 +255,216 @@ class Main(QDialog):
 
     # 2. 연산에 필요한 피연산자의 개수가 1개인 연산자들( √ , 1/x , x² ) : one_button_operation_clicked
     def one_button_operation_clicked(self, operation):
-        global i
-        if operation == "√":
-            equation= str(self.equation.text())
-            equation1= float(equation)
-            self.result = math.sqrt(equation1)
-            self.result = round(self.result, 9) #소수점 9자리까지 표기
-            equation = str(self.result)
-            self.equation.setText(equation)
-            i=2
+        global i,code,Anum,Bnum,op
+        if operation == "√":                            #함수식 설명
+            equation= str(self.equation.text()) # 현재 출력창의 텍스트(숫자) 받아들임
+            equation_1= float(equation)         # 연산에 필요한 임시 변수
+            self.result = math.sqrt(equation_1) # 루트 연산 실행해서 result에 저장
+            self.result = round(self.result, 9) # 소수점 9자리까지 표기
+            equation = str(self.result)         # equation변수에 result값 str형식으로 저장
+            self.equation.setText(equation)     # equation값 setText 출력
+            i=2                                 # 연산자 다음에 오는 숫자는 출력 초기화 된후 입력되도록
+            op=op+1                             # 피연산자들 순서를 구분하기 위한 함수
+            code = ""
+            Anum =None 
+            Bnum =None
 
         elif operation == "x²":
-            self.result = math.pow(self.Anumber, 2)
+            equation=str(self.equation.text())
+            equation_1=float(equation)
+            self.result = math.pow((equation_1), 2)
             self.result = round(self.result, 9)
-            self.Anumber = self.result
-            equation = self.equation.text()
             equation = str(self.result)
             self.equation.setText(equation)
             i=2
+            op=op+1
+            code =""
+            Anum =None 
+            Bnum =None
+
         elif operation == "1/x":
-            self.result = np.reciprocal(float(self.Anumber))
+            equation= str(self.equation.text())
+            equation_1=float(equation)
+            self.result = np.reciprocal(equation_1)
             self.result = round(self.result, 9)
-            self.Anumber = self.result
-            equation = self.equation.text()
             equation = str(self.result)
             self.equation.setText(equation)
             i=2
+            op=op+1
+            code = ""
+            Anum =None 
+            Bnum =None
+
+# 과거 연산자에 대한 계산
+    def past_operation(self, code):
+        global Anum, Bnum
+        if code=="%":
+            result1 = Anum % Bnum
+            result1 = round(result1, 9)
+            Anum=result1
+            self.equation.setText(str(result1))
+        elif code=="÷":
+            result1 = Anum / Bnum
+            result1 = round(result1, 9)
+            Anum=result1
+            self.equation.setText(str(result1))
+        elif code=="x":
+            result1 = Anum* Bnum
+            result1 = round(result1, 9)
+            Anum=result1
+            self.equation.setText(str(result1))
+        elif code=="-":
+            result1 = Anum - Bnum
+            result1 = round(result1, 9)
+            Anum=result1
+            self.equation.setText(str(result1))
+        elif code=="+":
+            result1 = Anum + Bnum
+            result1 = round(result1, 9)
+            Anum=result1
+            self.equation.setText(str(result1))
+
 
     #  3. 연산에 필요한 피연산자의 개수가 2개인 연산자들( % , ÷ , x , - , +) : button_operation_clicked
     def button_operation_clicked(self, operation):
-        equation = self.equation.text()
-        equation += operation
-        self.equation.setText(equation)
+        global i,op,A_op, B_op,code,Anum,Bnum
+        # 나머지 (%) 버튼 입력시
+        if operation == "%":
+            op=op+1
+            if i == 1 :
+                A_op = op-1                             #첫번째 숫자니까 연산 바로 필요 없음
+                equation= str(self.equation.text())     #현재 창에 있는 숫자 Anum으로 입력
+                Anum = float(equation)
+                code = "%"
+
+            elif i>=2 and Anum != None:                 #두번째 피연산까지 입력되었을때 (이땐 이전 연산 결과값 출력이 필요함)
+                if op > A_op :                          #현재 피연산자가 2번째 피연산자 B인지 확인
+                    B_op = op
+                    equation= str(self.equation.text()) #두번째 피연산자를 Bnum에 추출
+                    Bnum = float(equation)                                   
+                    self.past_operation(code)            #operation function 실행 (과거의 연산자에 대한 실행)
+                    A_op = B_op
+                    code = "%"
+
+            elif i>=2 and Anum == None :                #피연산자가 1개 필요한 연산(√ , 1/x , x²)이 이전에 실행됐었을때
+                A_op = op - 1
+                equation = str(self.equation.text())
+                Anum=float(equation)
+                code = "%"
+            i=2
+        # 나눗셈 (÷) 버튼 입력시
+        elif operation == "÷":
+            op=op+1
+            if i == 1 :
+                A_op = op-1                             #첫번째 숫자니까 연산 바로 필요 없음
+                equation= str(self.equation.text())     #현재 창에 있는 숫자 Anum으로 입력
+                Anum = float(equation)
+                code = "÷"
+
+            elif i>=2 and Anum != None:                 #두번째 피연산까지 입력되었을때 (이땐 이전 연산 결과값 출력이 필요함)
+                if op > A_op :                          #현재 피연산자가 2번째 피연산자 B인지 확인
+                    B_op = op
+                    equation= str(self.equation.text()) #두번째 피연산자를 Bnum에 추출
+                    Bnum = float(equation)                                   
+                    self.past_operation(code)            #operation function 실행 (과거의 연산자에 대한 실행)
+                    A_op = B_op
+                    code = "÷"
+
+            elif i>=2 and Anum == None :                #피연산자가 1개 필요한 연산(√ , 1/x , x²)이 이전에 실행됐었을때
+                A_op = op - 1
+                equation = str(self.equation.text())
+                Anum=float(equation)
+                code = "÷"
+            i=2
+        # 곱셈 (x) 버튼 입력시
+        elif operation == "x":
+            op=op+1
+            if i == 1 :
+                A_op = op-1                             #첫번째 숫자니까 연산 바로 필요 없음
+                equation= str(self.equation.text())     #현재 창에 있는 숫자 Anum으로 입력
+                Anum = float(equation)
+                code = "x"
+
+            elif i>=2 and Anum != None:                 #두번째 피연산까지 입력되었을때 (이땐 이전 연산 결과값 출력이 필요함)
+                if op > A_op :                          #현재 피연산자가 2번째 피연산자 B인지 확인
+                    B_op = op
+                    equation= str(self.equation.text()) #두번째 피연산자를 Bnum에 추출
+                    Bnum = float(equation)                                   
+                    self.past_operation(code)            #operation function 실행 (과거의 연산자에 대한 실행)
+                    A_op = B_op
+                    code = "x"
+
+            elif i>=2 and Anum == None :                #피연산자가 1개 필요한 연산(√ , 1/x , x²)이 이전에 실행됐었을때
+                A_op = op - 1
+                equation = str(self.equation.text())
+                Anum=float(equation)
+                code = "x"
+            i=2
+
+        if operation == "-":
+            op=op+1
+            if i == 1 :
+                A_op = op-1                             #첫번째 숫자니까 연산 바로 필요 없음
+                equation= str(self.equation.text())     #현재 창에 있는 숫자 Anum으로 입력
+                Anum = float(equation)
+                code = "-"
+
+            elif i>=2 and Anum != None:                 #두번째 피연산까지 입력되었을때 (이땐 이전 연산 결과값 출력이 필요함)
+                if op > A_op :                          #현재 피연산자가 2번째 피연산자 B인지 확인
+                    B_op = op
+                    equation= str(self.equation.text()) #두번째 피연산자를 Bnum에 추출
+                    Bnum = float(equation)                                   
+                    self.past_operation(code)            #operation function 실행 (과거의 연산자에 대한 실행)
+                    A_op = B_op
+                    code = "-"
+
+            elif i>=2 and Anum == None :                #피연산자가 1개 필요한 연산(√ , 1/x , x²)이 이전에 실행됐었을때
+                A_op = op - 1
+                equation = str(self.equation.text())
+                Anum=float(equation)
+                code = "-"
+            i=2
+
+        if operation == "+":
+            op=op+1
+            if i == 1 :
+                A_op = op-1                             #첫번째 숫자니까 연산 바로 필요 없음
+                equation= str(self.equation.text())     #현재 창에 있는 숫자 Anum으로 입력
+                Anum = float(equation)
+                code = "+"
+
+            elif i>=2 and Anum != None:                 #두번째 피연산까지 입력되었을때 (이땐 이전 연산 결과값 출력이 필요함)
+                if op > A_op :                          #현재 피연산자가 2번째 피연산자 B인지 확인
+                    B_op = op
+                    equation= str(self.equation.text()) #두번째 피연산자를 Bnum에 추출
+                    Bnum = float(equation)                                   
+                    self.past_operation(code)            #operation function 실행 (과거의 연산자에 대한 실행)
+                    A_op = B_op
+                    code = "+"
+
+            elif i>=2 and Anum == None :                #피연산자가 1개 필요한 연산(√ , 1/x , x²)이 이전에 실행됐었을때
+                A_op = op - 1
+                equation = str(self.equation.text())
+                Anum=float(equation)
+                code = "+"
+            i=2   
+        
 
     def button_equal_clicked(self):
-        equation = self.equation.text()
-        solution = eval(equation)
-        self.equation.setText(str(solution))
+        global A_op,B_op,Anum,Bnum,code,i
+        
+        B_op = op
+        equation= str(self.equation.text())
+        Bnum = float(equation)
+        self.past_operation(code)
+        A_op = B_op
+        code = ""
+        i=2
 
     def button_clear_clicked(self):
-        self.Anumber = 0
-        self.Bnumber = 0
-        global i
+        global Anum,Bnum,i
+        Anum = None
+        Bnum = None
         i = 1
         self.equation.setText("")
 
