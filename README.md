@@ -1,4 +1,6 @@
-# gui_calculator 개요
+# 파이썬을 이용하여 윈도우 계산기 구현하기
+
+## gui_calculator_project 개요
 
 파이썬을 이용하여 윈도우 표준 계산기와 비슷한 계산기를 실행해보는 프로그램입니다.
 
@@ -9,16 +11,17 @@ https://studyingrabbit.tistory.com/23
 
 위에서 참고한 계산기코드에서 추가로 구현할 목표는 다음과 같습니다.
 
- - UI 수정 및 개선
-* PyQt 기반의 UI를 사용하되, 버튼은 QGridLayout으로만 구성
-* 참고한 코드의 Equation, Solution값에 대해 2개의 창에서 출력되는것을 윈도우 계산기처럼 하나의 창에 표현 
-* 참고한 코드에 없는 항목( √ , 1/x , x², %)에 대해 버튼 추가
-* 각 연산 버튼 및 숫자 버튼의 배치 조정
+< UI 수정 및 개선 >
+    * PyQt 기반의 UI를 사용하되, 버튼은 QGridLayout으로만 구성
+    * 참고한 코드의 Equation, Solution값에 대해 2개의 창에서 출력되는것을 윈도우 계산기처럼 하나의 창에 표현 
+    * 참고한 코드에 없는 항목( √ , 1/x , x², %)에 대해 버튼 추가
+    * 각 연산 버튼 및 숫자 버튼의 배치 조정
 
- - 기능에 관한 수정 및 개선
-* 참고한 코드에 eval함수를 쓰지않고 기본 함수 및 라이브러리(수식,math,numpy 등)를 사용하여 계산 기능 구현
-* 참고한 코드에 없는 항목( √ , 1/x , x², %)에 대한 계산 기능 추가
-* CE, C 버튼을 눌렀을 경우 지금까지의 연산내용과 출력값을 전부 초기화
+< 기능에 관한 수정 및 개선 >
+    * 참고한 코드에 eval함수를 쓰지않고 기본 함수 및 라이브러리(수식,math,numpy 등)를 사용하여 계산 기능 구현
+    * 참고한 코드에 없는 항목( √ , 1/x , x², %)에 대한 계산 기능 추가
+    * CE, C 버튼을 눌렀을 경우 지금까지의 연산내용과 출력값을 전부 초기화
+
 
 ## 코드에 관하여
 
@@ -48,7 +51,7 @@ https://studyingrabbit.tistory.com/23
 
     예를들어 "3" -> " + " -> " 3 " 을 순서대로 눌렀을때, 다음으로 " -  " 버튼을 누르면 출력화면엔 " 6 " 이 나오고, 그다음 " 6 " 을 누른뒤 등호 " = "을 누르면 " 0 " 이 출력됩니다.
 
-### Prerequisites
+## Prerequisites
 
 프로그램을 실행하기 위해서 pyqt5파이썬 패키지 모듈설치가 필요합니다.
 
@@ -84,9 +87,3 @@ kukdong2(https://github.com/kukdong2)
 ## License
 
 This project is licensed under the Apache 2.0 License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
