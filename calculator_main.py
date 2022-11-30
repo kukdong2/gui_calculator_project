@@ -127,6 +127,8 @@ class Main(QDialog):
             number_button_dict[number] = QPushButton(str(number))
             number_button_dict[number].setMinimumWidth(95)
             number_button_dict[number].setMinimumHeight(57)
+            number_button_dict[number].setFont(QFont('Arial Black',14, QFont.Bold))
+            number_button_dict[number].setStyleSheet('background : white')
             number_button_dict[number].clicked.connect(lambda state, num=number:
                                                        self.number_button_clicked(num))
 
@@ -177,40 +179,37 @@ class Main(QDialog):
     ################################# 5. 기타 UI 설정 #################################
     ##################################################################################
 
-        # a. 연산 기능 버튼들의 크기 조정
-        button_remainder.setMinimumWidth(95)
-        button_remainder.setMinimumHeight(57)
-        button_CE.setMinimumWidth(95)
-        button_CE.setMinimumHeight(57)
-        button_clear.setMinimumWidth(95)
-        button_clear.setMinimumHeight(57)
+        # a. 연산 기능 버튼들의 크기 및 글씨체 조정
+        self.button_style(button_remainder)
+        self.button_style(button_CE)
+        self.button_style(button_clear)
         button_backspace.setMinimumWidth(95)
         button_backspace.setMinimumHeight(57)
+        button_backspace.setFont(QFont('Arial Nova',10, QFont.Bold))
 
-        button_reciprocal.setMinimumWidth(95)
-        button_reciprocal.setMinimumHeight(57)
-        button_square.setMinimumWidth(95)
-        button_square.setMinimumHeight(57)
-        button_root.setMinimumWidth(95)
-        button_root.setMinimumHeight(57)
-        button_division.setMinimumWidth(95)
-        button_division.setMinimumHeight(57)
-
-        button_plus.setMinimumWidth(95)
-        button_minus.setMinimumWidth(95)
-        button_product.setMinimumWidth(95)
-        button_equal.setMinimumWidth(95)
-        button_plus.setMinimumHeight(57)
-        button_minus.setMinimumHeight(57)
-        button_product.setMinimumHeight(57)
-        button_equal.setMinimumHeight(57)
+        self.button_style(button_reciprocal)
+        self.button_style(button_square)
+        self.button_style(button_root)
+        self.button_style(button_division)
+        
+        self.button_style(button_plus)
+        self.button_style(button_minus)
+        self.button_style(button_product)
+        self.button_style(button_equal)
 
         button_dot.setMinimumWidth(95)
         button_dot.setMinimumHeight(57)
+        button_dot.setFont(QFont('Arial Black',14, QFont.Bold))
         button_double_zero.setMinimumWidth(95)
         button_double_zero.setMinimumHeight(57)
-
-        # b. 창 title 및 size 설정
+        button_double_zero.setFont(QFont('Arial Black',14, QFont.Bold))
+        
+        # 버튼 색상 설정
+        button_equal.setStyleSheet('background : skyblue')
+        button_dot.setStyleSheet('background : white')
+        button_double_zero.setStyleSheet('background : white')
+        
+        # c. 창 title 및 size 설정
 
         self.setWindowTitle('계산기')
         self.resize(380, 550)
@@ -254,6 +253,7 @@ class Main(QDialog):
         
 
     # 2. 연산에 필요한 피연산자의 개수가 1개인 연산자들( √ , 1/x , x² ) : one_button_operation_clicked
+
     def one_button_operation_clicked(self, operation):
         global i,code,Anum,Bnum,op
         if operation == "√":                            #함수식 설명
@@ -352,6 +352,7 @@ class Main(QDialog):
                 Anum=float(equation)
                 code = "%"
             i=2
+
         # 나눗셈 (÷) 버튼 입력시
         elif operation == "÷":
             op=op+1
@@ -376,6 +377,7 @@ class Main(QDialog):
                 Anum=float(equation)
                 code = "÷"
             i=2
+
         # 곱셈 (x) 버튼 입력시
         elif operation == "x":
             op=op+1
@@ -401,6 +403,7 @@ class Main(QDialog):
                 code = "x"
             i=2
 
+        # 빼기 (-) 버튼 입력시
         if operation == "-":
             op=op+1
             if i == 1 :
@@ -424,7 +427,7 @@ class Main(QDialog):
                 Anum=float(equation)
                 code = "-"
             i=2
-
+        # 더하기 (+) 버튼 입력시
         if operation == "+":
             op=op+1
             if i == 1 :
@@ -448,11 +451,11 @@ class Main(QDialog):
                 Anum=float(equation)
                 code = "+"
             i=2   
-        
 
+    # 등호 " = " 버튼 입력시
     def button_equal_clicked(self):
         global A_op,B_op,Anum,Bnum,code,i
-        
+
         B_op = op
         equation= str(self.equation.text())
         Bnum = float(equation)
@@ -460,19 +463,25 @@ class Main(QDialog):
         A_op = B_op
         code = ""
         i=2
-
+    # CE, C 버튼 입력시
     def button_clear_clicked(self):
         global Anum,Bnum,i
         Anum = None
         Bnum = None
         i = 1
         self.equation.setText("")
-
+    # backspace 버튼 입력시
     def button_backspace_clicked(self):
         equation = self.equation.text()
         equation = equation[:-1]
         self.equation.setText(equation)
 
+    #버튼 ui함수
+    def button_style(self,button_name):
+        button_name.setMinimumWidth(95)
+        button_name.setMinimumHeight(57)
+        button_name.setFont(QFont('Arial Nova',14, QFont.Bold))
+        
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
